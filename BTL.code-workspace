@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "../../C/BTL"
+		},
+		{
+			"path": "../../C/excodeC"
+		},
+		{
+			"name": "MERC",
+			"path": "C:/Users/Dell/OneDrive/Tài liệu/PlatformIO/Projects/MERC"
+		},
+		{
+			"name": "MERC",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"string.h": "c"
+		}
+	}
+}
