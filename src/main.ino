@@ -4,6 +4,7 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <Servo.h>
+
 // khai báo dò line
 QTRSensors qtr;
 const uint8_t SensorCount = 8;
@@ -14,10 +15,9 @@ float Kd = 5.0;
 int P;
 int I;
 int D;
-int lastError = 0;// sai số cuối cùng
-//boolean onoff = false;// bật tắt tính năng dò line 
+int lastError = 0;
 
-// Thêm 2 biến toàn cục ở đầu file
+//
 unsigned long autoModeStartTime = 0;
 bool delayPassed = false;
 //--------
@@ -28,8 +28,8 @@ const uint8_t maxspeedb = 160;
 const uint8_t basespeeda = 80;
 const uint8_t basespeedb = 80;
 
-int mode = 24;// led trạng thái dò line
-int buttoncalibrate = 25;//Nút thực hiện hiệu chỉnh cảm biến
+int mode = 24; // led trạng thái dò line
+int buttoncalibrate = 25; // Nút thực hiện hiệu chỉnh cảm biến
 
 PS2X ps2x;
 LiquidCrystal_I2C lcd(0x27, 20, 4);
@@ -75,7 +75,7 @@ void setup() {
 
     qtr.setTypeAnalog(); 
     qtr.setSensorPins((const uint8_t[]){A0, A1, A2, A3, A4, A5, A6, A7}, SensorCount);
-    qtr.setEmitterPin(13);//Khi bật LED emitter, cảm biến sẽ phát hiện ánh sáng phản xạ từ bề mặt (trắng hoặc đen) để xác định đường đi.
+    qtr.setEmitterPin(13);
 
     int error = ps2x.config_gamepad(PS2_CLK, PS2_CMD, PS2_ATT, PS2_DAT, false, true);
     ps2Connected = (error == 0);
@@ -106,7 +106,7 @@ void setup() {
 
   boolean Ok = false;
     while (Ok == false) {
-      if(digitalRead(buttoncalibrate) == LOW)// Kiểm tra xem nút nhấn buttoncalibrate (được gán với chân số 17) có được nhấn hay không.
+      if(digitalRead(buttoncalibrate) == LOW)
       {
         calibration();
         Ok = true;
@@ -144,10 +144,7 @@ void loop() {
         autoModeStartTime = millis(); // Lưu thời điểm bắt đầu chế độ auto
         }
         //.....
-        //lcd.setCursor(0, 1);
-        //lcd.print(autoMode ? "Mode: Auto   " : "Mode: Manual");
         Serial.println(autoMode ? "Chế độ: Tự động" : "Chế độ: Điều khiển");
-        //delay(500);
     }
 
     int joyLX = ps2x.Analog(PSS_LX) - 128;
@@ -201,20 +198,6 @@ bool reconnect() {
 }
 
 void controlMotors(int lx, int ly) {
-    // int speed = map(abs(ly), 0, 128, 0, 200);
-    // int turnSpeed = map(abs(lx), 0, 128, 0, 160);
-
-    // if (ly > 10) {
-    //     moveForward(speed);
-    // } else if (ly < -10) {
-    //     moveBackward(speed);
-    // } else if (lx > 10) {
-    //     turnRight(turnSpeed);
-    // } else if (lx < -10) {
-    //     turnLeft(turnSpeed);
-    // } else {
-    //     stopMotors();
-    // }
     const int moveSpeed = 200;    // Tốc độ tiến/lùi
     const int turnSpeed = 150;    // Tốc độ rẽ
     
@@ -226,19 +209,18 @@ void controlMotors(int lx, int ly) {
 
     // Xử lý tổ hợp phím
     if (up && !down) {
-        if (left)       turnLeft(turnSpeed);   // Tiến + Rẽ trái
-        else if (right) turnRight(turnSpeed);  // Tiến + Rẽ phải
-        else            moveForward(moveSpeed); // Tiến thẳng
+        if (left)       turnLeft(turnSpeed);  
+        else if (right) turnRight(turnSpeed);  
+        else            moveForward(moveSpeed); 
     } 
     else if (down && !up) {
-        if (left)       turnLeft(turnSpeed);   // Lùi + Rẽ trái
-        else if (right) turnRight(turnSpeed);  // Lùi + Rẽ phải
-        else            moveBackward(moveSpeed); // Lùi thẳng
+        if (left)       turnLeft(turnSpeed);   
+        else if (right) turnRight(turnSpeed);  
+        else            moveBackward(moveSpeed); 
             } 
-    else if (left)      turnLeft(turnSpeed);   // Rẽ trái tại chỗ
-    else if (right)     turnRight(turnSpeed);  // Rẽ phải tại chỗ
-    else                stopMotors();          // Dừng
-}
+    else if (left)      turnLeft(turnSpeed);   
+    else if (right)     turnRight(turnSpeed);  
+    else                stopMotors();          
 
 void moveForward(int speed) {
     analogWrite(L_EN, speed);
